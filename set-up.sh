@@ -219,13 +219,15 @@ EOF
 function config_git {
   echo "config git..."
   sudo apt install git git-flow bash-completion
-  if [ ! -d "$HOME/Documents/Software/git" ]; then
-    mkdir $HOME/Documents/Software/git
+  if [ ! -d "$HOME/Documents/Software" ]; then
+    mkdir -p $HOME/Documents/Software
   fi
   echo "download git-flow-completion.bash ..."
-  wget https://raw.githubusercontent.com/bobthecow/git-flow-completion/master/git-flow-completion.bash -O $HOME/Documents/Software/git/git-flow-completion.bash
+  #wget https://raw.githubusercontent.com/bobthecow/git-flow-completion/master/git-flow-completion.bash -O $HOME/Documents/Software/git/git-flow-completion.bash
+  cd $HOME/Documents/Software
+  git clone git@github.com:bobthecow/git-flow-completion.git
   echo "#for git" >> ~/.bashrc
-  echo "source $HOME/Documents/Software/git/git-flow-completion.bash" >> ~/.bashrc
+  echo "source $HOME/Documents/Software/git-flow-completion/git-flow-completion.bash" >> ~/.bashrc
   sudo sh -c "cat >> ~/.bashrc" << EOF
 function git_branch {  
   branch="\`git branch 2>/dev/null | grep "^\\*" | sed -e "s/^\\*\\ //"\`"  
