@@ -12,6 +12,7 @@ Usage:
     $0 --config_workspace  (config workspace)
     $0 --config_rc_lcoal   (add rc.local file for ubuntu 18.04)
     $0 --install_zmq
+    $0 --add_local_systemd path_to_local_script
     $0 -h                  (Display Usage)
 EOF
     exit 1
@@ -242,6 +243,36 @@ export PS1='\u@\h \[\033[01;36m\]\W\[\033[01;32m\]\$(git_branch)\[\033[00m\] \\$
 EOF
 }
 
+function add_local_systemd {
+  echo "add local systemd"
+  if [ "$(lsb_release -sc)"=="bionic" ]; then
+    echo "current system is bionic"
+    if [ $1 ]; then
+      echo "the script file is $1"
+      script_name=$(basename ${1} .sh)
+      service_name="/etc/systemd/system/$script_name.service"
+      
+      if [ ! -f $service_name ]; then
+        echo "writting $service_name"
+        sudo sh -c "cat > $service_name" << EOF
+[Unit]
+Description=launch $1
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=$1
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target
+EOF
+      sudo systemctl daemon-reload
+      sudo systemctl enable $service_name
+      fi
+    fi
+  fi
+}
+
 [ "$1" = "-h" ] && Usage
 [ $# = 0 ] && Usage
 
@@ -256,6 +287,7 @@ do
   --install_zmq)      install_zmq;;
   --config_rc_local)  config_rc_local;;
   --config_git)       config_git;;
+  --add_local_systemd)add_local_systemd $2;;
   --) shift
     break ;;
   esac
