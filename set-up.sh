@@ -262,6 +262,7 @@ After=network.target
 [Service]
 Type=forking
 ExecStart=$1
+TimeoutSec=0
 RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
