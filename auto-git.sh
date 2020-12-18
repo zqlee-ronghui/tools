@@ -11,7 +11,12 @@ function relay()
     echo "$1 is already exist."
     cd $repo
   fi
-  git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+  remote_branches=`git branch -r | grep -v '\->'`;
+  for remote_branch in ${remote_branches[*]}; do
+    if [[ "$remote_branch" =~ ^origin/.* ]]; then
+      git branch --track "${remote_branch#origin/}" "$remote_branch"
+    fi
+  done
   git fetch --all
   git pull --all
 
