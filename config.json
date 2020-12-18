@@ -1,0 +1,8 @@
+{
+  "repos": [
+    {
+      "github": "git@github.com:strasdat/Sophus.git",
+      "gitlab": "git@gitlab.com:LLuoman/sophus.git"
+    }
+  ]
+}
